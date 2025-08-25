@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>CIGARRERIA J.H</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>📦 Inventario del Supermercado</h1>
+
+    <h2>Inventario actual</h2>
+    {% if inventario %}
+    <table>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Acción</th>
+        </tr>
+        {% for nombre, datos in inventario.items() %}
+        <tr>
+            <td>{{ nombre }}</td>
+            <td>{{ datos['cantidad'] }}</td>
+            <td>${{ datos['precio'] }}</td>
+            <td>
+                <form action="/vender" method="post" style="display:inline;">
+                    <input type="hidden" name="nombre" value="{{ nombre }}">
+                    <button class="btn btn-sell" type="submit">Vender 1</button>
+                </form>
+                <form action="/eliminar" method="post" style="display:inline;">
+                    <input type="hidden" name="nombre" value="{{ nombre }}">
+                    <button class="btn btn-delete" type="submit">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No hay productos en el inventario.</p>
+    {% endif %}
+
+    <h2>Agregar producto</h2>
+    <form action="/agregar" method="post" class="formulario">
+        <input type="text" name="nombre" placeholder="Nombre" required>
+        <input type="number" name="cantidad" placeholder="Cantidad" required>
+        <input type="number" step="0.01" name="precio" placeholder="Precio" required>
+        <button class="btn btn-add" type="submit">Agregar</button>
+    </form>
+</body>
+</html>
